@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  # These are just simple key-value pairs
+  ENVIRONMENT_TYPE: "development"
+  DATABASE_URL: "http://my-database.internal"
+  APP_MESSAGE: "Welcome to my app! Kubernetes is awesome! with ConfigMaps and Secrets!"

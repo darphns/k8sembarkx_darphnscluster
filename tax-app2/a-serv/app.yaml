@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serv-a
+  labels:
+    app: serv-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: serv-a
+  template:
+    metadata:
+      labels:
+        app: serv-a
+    spec:
+      containers:
+        - name: serv-a
+          image: embarkx/tax-service-a:latest
+          env:
+            - name: TAX_SERVICE_URL
+              value: "http://serv-b:4000"  #this is service name, which is used to access the service from other services
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: serv-a   #this is service name, which is used to access the service
+spec:
+  selector:
+    app: serv-a
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 32000
+

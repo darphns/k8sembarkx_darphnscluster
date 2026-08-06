@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1-hello
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app1-hello
+  template:
+    metadata:
+      labels:
+        app: app1-hello
+    spec:
+      containers:
+      - name: app1-hello
+        image: ghost:latest 
+        ports:
+        - containerPort: 2368
+        
+        # Inject this specific variable to force the built-in database
+        env:
+        - name: NODE_ENV
+          value: "development"
+        - name: url
+          value: "http://localhost:30000"
+        # Inside your deployment.yaml container spec...
+        # env:
+        # # 1. Pulling from the ConfigMap
+        # - name: ENVIRONMENT_TYPE
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: app-config         # The name of your ConfigMap
+        #       key: ENVIRONMENT_TYPE    # The specific piece of data you want
+        # - name: DATABASE_URL
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: app-config         # The name of your ConfigMap
+        #       key: DATABASE_URL        # The specific piece of data you want
+        # - name: APP_MESSAGE
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: app-config         # The name of your ConfigMap
+        #       key: APP_MESSAGE         # The specific piece of data you want
+        # # 2. Pulling from the Secret
+        # - name: DATABASE_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: app-secret         # The name of your Secret
+        #       key: DATABASE_PASSWORD   # The specific piece of data you want
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app1-hello
+spec:
+  type: NodePort
+  selector:
+    # This selector is the magic link. It tells the Service to route
+    # traffic ONLY to Pods that have the label "app: web"
+    app: app1-hello
+  ports:
+    - protocol: TCP
+      port: 2368          # The port the Service listens on internally
+      targetPort: 2368    # The port your Ghost container is listening on
+      nodePort: 30000   # The exact port exposed on your local machine (http://localhost:30000)
+
