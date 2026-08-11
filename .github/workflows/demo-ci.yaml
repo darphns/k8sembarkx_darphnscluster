@@ -17,4 +17,4 @@ jobs:                #this is actual block of code
 
     - name: 2. Validate YAML Syntax
       run: |
-        python3 -c 'import yaml, glob; [yaml.safe_load(open(f)) for f in glob.glob("demo/*.yaml") + glob.glob("demo/*.yml")]'
+        python3 -c 'import yaml, glob; [list(yaml.safe_load_all(open(f))) for f in glob.glob("demo/*.yaml") + glob.glob("demo/*.yml")]'
