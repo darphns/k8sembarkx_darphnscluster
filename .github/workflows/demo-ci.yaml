@@ -22,6 +22,7 @@ jobs:                #this is actual block of code
         java-version: '21'
         distribution: 'temurin'
         cache: 'maven'
+        cache-dependency-path: 'demo/pom.xml'
 
     - name: 3. Build Application
       run: |
