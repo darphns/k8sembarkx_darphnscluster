@@ -13,12 +13,18 @@ jobs: # The actual list of tasks we want the cloud server to execute
   validate-yaml: # A custom name we created for this specific block of work
     runs-on: ubuntu-latest # Tells GitHub to create a fresh, temporary Linux virtual machine just for this run
 
-    steps: # The step-by-step instructions the temporary Linux machine must follow
-    - name: 1. Checkout Code # The display title for this step in the GitHub logs
-      uses: actions/checkout@v4 # A pre-built GitHub tool that securely downloads your code onto the blank Linux machine
+    steps: 
+    - name: 1. Checkout Code 
+      uses: actions/checkout@v4 
 
-    - name: 2. Validate All YAML Syntax # The display title for the validation step
-      run: | # The pipe symbol (|) lets us write a multi-line Linux terminal command below
-        # This Python script acts as a global search-and-check tool. 
-        # It recursively hunts down every .yaml and .yml file in your entire project and verifies the syntax is perfect.
-        python3 -c 'import yaml, glob; [list(yaml.safe_load_all(open(f))) for f in glob.glob("**/*.yaml", recursive=True) + glob.glob("**/*.yml", recursive=True)]'
+    - name: 2. Install Kubeconform
+      run: |
+        # Downloading the official Kubeconform tool directly to the cloud runner
+        wget https://github.com/yannh/kubeconform/releases/download/v0.6.3/kubeconform-linux-amd64.tar.gz
+        tar xf kubeconform-linux-amd64.tar.gz
+        sudo mv kubeconform /usr/local/bin/
+
+    - name: 3. Lint Kubernetes Manifests
+      run: |
+        # Scanning all YAML files to ensure they are valid Kubernetes resources
+        kubeconform -summary -ignore-missing-schemas demo/ app1_hello/ tax-app2/
