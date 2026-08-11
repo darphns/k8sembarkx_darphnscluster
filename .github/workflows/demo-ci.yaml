@@ -35,9 +35,9 @@ jobs: # The actual list of tasks we want the cloud server to execute
     - name: 5. Deploy Microservices to Cluster
       run: |
         # Using kubectl to apply our freshly linted files directly to the temporary cloud cluster
-        kubectl apply -f demo/
-        kubectl apply -f app1_hello/
-        kubectl apply -f tax-app2/
+        kubectl apply -f demo/ -R
+        kubectl apply -f app1_hello/ -R
+        kubectl apply -f tax-app2/ -R
 
     - name: 6. Verify Cluster State
       run: |
