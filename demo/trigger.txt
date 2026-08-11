@@ -1,2 +1,3 @@
 trigger the fixed pipeline (no.1)
 trigger the fixed pipeline (no.2)
+swapping to yaml validation
