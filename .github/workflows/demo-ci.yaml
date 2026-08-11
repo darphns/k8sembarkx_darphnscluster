@@ -1,0 +1,31 @@
+name: demo ci pipeline
+
+on: 
+  push:               #event where gist listening for
+    branches:         #pipeline only run if code is push in main branch.
+      - main
+    paths:
+      -'demo/**' #this ensure pipeline onlyrun if any changes inside demo folder (ADS) refrence
+
+jobs:                #this is actual block of code
+  build-and-test:      #you can give any name( this is just a custome name given to jobs)
+    run-on: ubuntu-latest #the server provided by github, absoulately free and empty(also free insize)
+
+    steps:
+    - name:  1. Checkout Code  #
+      uses: actions/checkout@v4 # this download the code from repo and place to new ubuntu VM
+
+      
+    - name: 2. set up Java 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: 'maven'
+
+    - name: 3. Build Application
+        run: |
+          cd demo
+          ./mvnw clean package
+
+
