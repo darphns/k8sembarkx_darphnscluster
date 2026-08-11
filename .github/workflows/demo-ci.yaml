@@ -5,11 +5,11 @@ on:
     branches:         #pipeline only run if code is push in main branch.
       - main
     paths:
-      -'demo/**' #this ensure pipeline onlyrun if any changes inside demo folder (ADS) refrence
+      - 'demo/**' #this ensure pipeline onlyrun if any changes inside demo folder (ADS) refrence
 
 jobs:                #this is actual block of code
   build-and-test:      #you can give any name( this is just a custome name given to jobs)
-    run-on: ubuntu-latest #the server provided by github, absoulately free and empty(also free insize)
+    runs-on: ubuntu-latest #the server provided by github, absoulately free and empty(also free insize)
 
     steps:
     - name:  1. Checkout Code  #
@@ -24,8 +24,6 @@ jobs:                #this is actual block of code
         cache: 'maven'
 
     - name: 3. Build Application
-        run: |
-          cd demo
-          ./mvnw clean package
-
-
+      run: |
+        cd demo
+        ./mvnw clean package
