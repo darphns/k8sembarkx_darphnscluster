@@ -3,3 +3,4 @@ trigger the fixed pipeline (no.2)
 swapping to yaml validation
 swapping to yaml validation
 swapping to yaml validation
+initiating full CD cloud Deployment

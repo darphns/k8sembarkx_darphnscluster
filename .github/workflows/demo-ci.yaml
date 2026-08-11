@@ -28,3 +28,19 @@ jobs: # The actual list of tasks we want the cloud server to execute
       run: |
         # Scanning all YAML files to ensure they are valid Kubernetes resources
         kubeconform -summary -ignore-missing-schemas demo/ app1_hello/ tax-app2/
+
+    - name: 4. Create Cloud Kubernetes Cluster (kind)
+      uses: helm/kind-action@v1.10.0 # A pre-built GitHub tool that instantly spins up a temporary cluster
+
+    - name: 5. Deploy Microservices to Cluster
+      run: |
+        # Using kubectl to apply our freshly linted files directly to the temporary cloud cluster
+        kubectl apply -f demo/
+        kubectl apply -f app1_hello/
+        kubectl apply -f tax-app2/
+
+    - name: 6. Verify Cluster State
+      run: |
+        # Pausing for 10 seconds to let the pods boot up, then printing the cluster status
+        sleep 10 
+        kubectl get all -A
