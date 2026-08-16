@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: app1-hello
-        image: ghost:latest 
+        image: darphns/app1_hello:latest 
         ports:
         - containerPort: 2368
         

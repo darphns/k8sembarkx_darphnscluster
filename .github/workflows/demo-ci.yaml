@@ -27,30 +27,36 @@ jobs: # The actual list of tasks we want the cloud server to execute
         docker build -t ${{ secrets.DOCKER_USERNAME }}/app1_hello:${{github.sha}} .
         # Pushing the freshly built image to Docker Hub
         docker push ${{ secrets.DOCKER_USERNAME }}/app1_hello:${{github.sha}}
-        
-    - name: 4. Install Kubeconform
+    - name: 4. Inject Dynamic Image Tag
+      run: |
+       #Find the Hardcoded ':latest' tag and replace it with the dynamic GithubCommit ID
+       sed -i "s|darphns/app1_hello:latest|${{secrets.DOCKER_USERNAME}}/app1_hello:${{github.sha}}|g" app1_hello/*.yaml
+       #Print the file to the log so we can visually verify the replacement worked
+      cat app1_hello/*.yaml | grep image:
+
+    - name: 5. Install Kubeconform
       run: |
         # Downloading the official Kubeconform tool directly to the cloud runner
         wget https://github.com/yannh/kubeconform/releases/download/v0.6.3/kubeconform-linux-amd64.tar.gz
         tar xf kubeconform-linux-amd64.tar.gz
         sudo mv kubeconform /usr/local/bin/
 
-    - name: 5. Lint Kubernetes Manifests
+    - name: 6. Lint Kubernetes Manifests
       run: |
         # Scanning all YAML files to ensure they are valid Kubernetes resources
         kubeconform -summary -ignore-missing-schemas demo/ app1_hello/ tax-app2/
 
-    - name: 6. Create Cloud Kubernetes Cluster (kind)
+    - name: 7. Create Cloud Kubernetes Cluster (kind)
       uses: helm/kind-action@v1.10.0 # A pre-built GitHub tool that instantly spins up a temporary cluster
 
-    - name: 7. Deploy Microservices to Cluster
+    - name: 8. Deploy Microservices to Cluster
       run: |
         # Using kubectl to apply our freshly linted files directly to the temporary cloud cluster
         kubectl apply -f demo/ -R
         kubectl apply -f app1_hello/ -R
         kubectl apply -f tax-app2/ -R
 
-    - name: 8. Verify Cluster State
+    - name: 9. Verify Cluster State
       run: |
         # Pausing for 10 seconds to let the pods boot up, then printing the cluster status
         sleep 10 
