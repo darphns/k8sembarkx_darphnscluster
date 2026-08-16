@@ -24,9 +24,9 @@ jobs: # The actual list of tasks we want the cloud server to execute
       run: |
         cd app1_hello/
         # Building the image and tag with unique Github commit I, then push
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/app1_hello:${{GITHUB_SHA}} .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/app1_hello:${{github.sha}} .
         # Pushing the freshly built image to Docker Hub
-        docker push ${{ secrets.DOCKER_USERNAME }}/app1_hello:${{GITHUB_SHA}}
+        docker push ${{ secrets.DOCKER_USERNAME }}/app1_hello:${{github.sha}}
         
     - name: 4. Install Kubeconform
       run: |
