@@ -8,6 +8,13 @@ on: # The 'motion sensor' that tells GitHub exactly when to wake up and run this
       - 'demo/**' 
       - 'app1_hello/**'
       - 'tax-app2/**'
+  pull_request: # Also trigger the pipeline for any pull requests targeting the 'main' branch
+    branches: 
+      - main
+    paths:
+      - 'demo/**'
+      - 'app1_hello/**'
+      - 'tax-app2/**'
 
 jobs: # The actual list of tasks we want the cloud server to execute
   validate-yaml: # A custom name we created for this specific block of work
