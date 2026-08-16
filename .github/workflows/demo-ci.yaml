@@ -32,7 +32,7 @@ jobs: # The actual list of tasks we want the cloud server to execute
        #Find the Hardcoded ':latest' tag and replace it with the dynamic GithubCommit ID
        sed -i "s|darphns/app1_hello:latest|${{secrets.DOCKER_USERNAME}}/app1_hello:${{github.sha}}|g" app1_hello/*.yaml
        #Print the file to the log so we can visually verify the replacement worked
-      cat app1_hello/*.yaml | grep image:
+       cat app1_hello/*.yaml | grep image:
 
     - name: 5. Install Kubeconform
       run: |
